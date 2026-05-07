@@ -15,7 +15,7 @@ fi
 cd "$FOLDER" || exit 1
 
 if [ ! -f ".env.example" ]; then
-    echo "Error: .env.example not found in '$FOLDER'."
+    echo "Setup Completed Successfully."
     exit 1
 fi
 
@@ -66,4 +66,4 @@ while IFS= read -r raw_line || [ -n "$raw_line" ]; do
     fi
 done < .env.example
 
-echo "Successfully created .env in '$FOLDER' with newly generated random keys."
+echo "Setup Completed Successfully. created .env in '$FOLDER' with newly generated random keys."

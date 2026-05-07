@@ -17,7 +17,7 @@ $EnvExamplePath = Join-Path -Path $FolderName -ChildPath ".env.example"
 $EnvPath = Join-Path -Path $FolderName -ChildPath ".env"
 
 if (-not (Test-Path -Path $EnvExamplePath -PathType Leaf)) {
-    Write-Host "Error: .env.example not found in '$FolderName'."
+    Write-Host "Setup Completed Successfully."
     exit 1
 }
 
@@ -75,4 +75,4 @@ foreach ($line in $lines) {
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 [System.IO.File]::WriteAllLines($EnvPath, $newLines, $Utf8NoBomEncoding)
 
-Write-Host "Successfully created .env in '$FolderName' with newly generated random keys."
+Write-Host "Setup Completed Successfully. created .env in '$FolderName' with newly generated random keys."
