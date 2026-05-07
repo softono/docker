@@ -1,0 +1,67 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: always
+
+    ports:
+      - "127.0.0.1:5678:5678"
+
+    environment:
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=${N8N_PROTOCOL}
+
+      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE}
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
+
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=${DB_HOST}
+      - DB_POSTGRESDB_PORT=${DB_PORT}
+      - DB_POSTGRESDB_DATABASE=${DB_NAME}
+      - DB_POSTGRESDB_USER=${DB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
+
+      - GENERIC_TIMEZONE=${TIMEZONE}
+      - TZ=${TIMEZONE}
+
+      - WEBHOOK_URL=${WEBHOOK_URL}
+
+      # Recommended
+      - EXECUTIONS_PROCESS=main
+      - EXECUTIONS_MODE=regular
+
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+    depends_on:
+      - postgres
+
+    networks:
+      - n8n_network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: n8n_postgres
+    restart: always
+
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - n8n_network
+
+volumes:
+  n8n_data:
+  postgres_data:
+
+networks:
+  n8n_network:
