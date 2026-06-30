@@ -1,0 +1,21 @@
+services:
+  mongodb:
+    image: ${VERSION}
+    container_name: mongodb
+    restart: unless-stopped
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      TZ: ${TZ}
+
+    ports:
+      - "${MONGODB_PORT}:27017"
+
+    volumes:
+      - ./data:/data/db
+
+    command:
+      - --auth
+      - --bind_ip_all
+      - --wiredTigerCacheSizeGB=0.5

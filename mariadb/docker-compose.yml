@@ -1,0 +1,21 @@
+services:
+  mariadb:
+    image: mariadb:${VERSION}
+    container_name: mariadb
+    restart: unless-stopped
+    network_mode: host
+
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      TZ: UTC
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - ./data:/var/lib/mysql
+
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+00:00

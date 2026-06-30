@@ -1,5 +1,0 @@
-general_settings:
-  master_key: "hebr9pNV51PKMou"
-  database_url: "postgresql://litellm_user:5dJD9884LqGjNrn@127.0.0.1:5432/litellm"
-  base_url: "https://ai.example.com"
-  store_prompts_in_spend_logs: true
