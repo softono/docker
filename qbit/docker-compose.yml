@@ -1,0 +1,22 @@
+services:
+  qbit:
+    image: ${IMAGE}
+    container_name: ${CONTAINER_NAME}
+    restart: ${RESTART_POLICY}
+
+    ports:
+      - "${WEB_PORT}:80"
+      - "${TORRENT_PORT}:6881/tcp"
+      - "${TORRENT_PORT}:6881/udp"
+
+    volumes:
+      - ${HTPASSWD_PATH}:/etc/apache2/.htpasswd
+      - ${DOWNLOADS_PATH}:/downloads
+      - ${CONFIG_PATH}:/config
+
+    networks:
+      - media
+
+networks:
+  media:
+    name: ${NETWORK_NAME}
