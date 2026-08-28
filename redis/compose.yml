@@ -1,0 +1,44 @@
+services:
+  redis:
+    image: redis:8.2
+    container_name: redis
+    restart: unless-stopped
+
+    environment:
+      TZ: UTC
+
+    ports:
+      - "127.0.0.1:6379:6379"
+
+    volumes:
+      - redis_data:/data
+
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD}
+      # Persistence
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+      - --save
+      - "900 1"
+      - --save
+      - "300 10"
+      - --save
+      - "60 10000"
+      # Performance / resource limits
+      - --maxmemory
+      - 2gb
+      - --maxmemory-policy
+      - noeviction
+
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis_data:

@@ -35,10 +35,10 @@ Ultimate Directory of Docker templates. Ready-to-use Docker setups.
 
 Here are the currently available ready-to-use Docker configurations:
 
-- **`lightllm`**
-- **`n8n`**
-- **`redis`**
-- **`stremio`**
+- **`mariadb`** — MariaDB 12.3
+- **`postgres`** — PostgreSQL 18.6
+- **`mongodb`** — MongoDB 8.3
+- **`redis`** — Redis 8.2
 
 ## Installing Docker
 
