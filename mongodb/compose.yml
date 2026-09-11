@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:8.3
+    image: mongo:4.4
     container_name: mongodb
     restart: unless-stopped
 
@@ -23,8 +23,8 @@ services:
       - --slowms=200
 
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
-      interval: 30s
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 60s
       timeout: 5s
       retries: 5
 

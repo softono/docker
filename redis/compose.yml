@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
 
     environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       TZ: UTC
 
     ports:
@@ -36,7 +37,7 @@ services:
 
     healthcheck:
       test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping | grep -q PONG"]
-      interval: 10s
+      interval: 60s
       timeout: 5s
       retries: 5
 
