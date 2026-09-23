@@ -1,0 +1,17 @@
+services:
+  qbit:
+    image: mhdzumair/qbittorrent-webdav:latest
+    container_name: qbit
+    restart: unless-stopped
+
+    environment:
+      - QBT_WEBUI_PORT=8081
+
+    ports:
+      - "8081:8081"
+      - "6881:6881"
+      - "6881:6881/udp"
+
+    volumes:
+      - ./data/config:/config
+      - ./data/downloads:/downloads

@@ -1,0 +1,17 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+
+    ports:
+      - "8096:8096"
+
+    environment:
+      - TZ=Asia/Kolkata
+
+    volumes:
+      - ./data:/config
+      - /media/creator/hdd/share:/media/share:rw
+      - /media/creator/media:/media/media:rw
+      - /www/wwwroot/app/qbit/data/downloads:/media/downloads:rw
