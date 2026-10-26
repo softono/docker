@@ -12,5 +12,5 @@ services:
 
     volumes:
       - ./data:/config
-      - /media/creator/media:/media/media:rw
+      - /media/creator/hdd/media:/media/hdd/media:rw
       - /www/wwwroot/app/qbit/data/downloads:/media/downloads:rw
