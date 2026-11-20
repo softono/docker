@@ -1,0 +1,51 @@
+services:
+  trilium:
+    # Official TriliumNext image — pin to a specific tag in production for stability.
+    # Available tags: https://github.com/TriliumNext/trilium/pkgs/container/trilium
+    image: ghcr.io/triliumnext/trilium:${TRILIUM_VERSION:-latest}
+    container_name: triliumnext
+    env_file:
+      - .env
+    ports:
+      # Bind only to localhost — Nginx/Apache on the host OS will reverse-proxy this.
+      # Change to "0.0.0.0:8080:8080" only if you need direct external access.
+      - "127.0.0.1:${TRILIUM_PORT:-8080}:8080"
+
+    volumes:
+      # Persistent data: SQLite database, config.ini, and automatic backups.
+      # NEVER change the internal path (/home/node/trilium-data).
+      - ./data:/home/node/trilium-data
+
+      # Sync host timezone into the container (Linux hosts only).
+      # Remove this line on Windows/macOS and use the TZ env var instead.
+      - /etc/localtime:/etc/localtime:ro
+
+    environment:
+      TZ: ${TZ:-UTC}
+
+      # ── Network / listener ──────────────────────────────────────────────────
+      # These override the equivalent settings in config.ini.
+      TRILIUM_NETWORK_PORT: "8080"
+
+      # Set to "loopback" when behind a local reverse proxy (Nginx/Apache on host).
+      # Set to your Docker subnet (e.g. "172.18.0.0/16") when proxying from another container.
+      TRILIUM_NETWORK_TRUSTEDREVERSEPROXY: ${TRILIUM_NETWORK_TRUSTEDREVERSEPROXY:-loopback}
+
+      # Allowed CORS origins — set to your public URL in production.
+      TRILIUM_NETWORK_CORSALLOWORIGIN: ${TRILIUM_PUBLIC_URL:-*}
+
+      # ── General ─────────────────────────────────────────────────────────────
+      TRILIUM_GENERAL_INSTANCENAME: ${TRILIUM_INSTANCE_NAME:-My Trilium}
+
+      # ── Sync (optional — only needed for multi-device sync server setup) ────
+      # TRILIUM_SYNC_SYNCSERVERHOST: ${TRILIUM_SYNC_SERVER_HOST:-}
+      # TRILIUM_SYNC_SYNCTIMEOUT:    ${TRILIUM_SYNC_TIMEOUT:-30000}
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health-check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
