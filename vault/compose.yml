@@ -1,0 +1,15 @@
+services:
+  vaultwarden:
+    # Use the postgresql-tagged image — built with PostgreSQL support enabled
+    image: vaultwarden/server:latest-alpine
+    container_name: vault
+    ports:
+      - "127.0.0.1:${VAULT_PORT:-8083}:80"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
+    # Allows DATABASE_URL to reference host.docker.internal → host OS PostgreSQL
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

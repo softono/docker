@@ -1,0 +1,45 @@
+services:
+  openviking:
+    # Official image — includes the server, VikingBot, and the web console UI.
+    # CN mirror (if ghcr.io is slow):
+    #   image: openviking-cn-beijing.cr.volces.com/volcengine/openviking:latest
+    image: ghcr.io/volcengine/openviking:latest
+    container_name: memory
+    env_file:
+      - .env
+    ports:
+      # Bind only to localhost — Nginx/Apache on the host OS will reverse-proxy this.
+      # Change to "0.0.0.0:1933:1933" only if you need direct external access.
+      - "127.0.0.1:${OPENVIKING_SERVER_PORT:-1933}:${OPENVIKING_SERVER_PORT:-1933}"
+
+      # Optional: MCP gateway port (enable OPENVIKING_GATEWAY_ENABLED=true in .env).
+      # Remove or comment out if you are not using the gateway feature.
+      - "127.0.0.1:${OPENVIKING_GATEWAY_PORT:-1934}:${OPENVIKING_GATEWAY_PORT:-1934}"
+
+    volumes:
+      # Persistent data directory (indexes, RAGFS files, SQLite metadata).
+      - ./data:/app/.openviking
+
+      # Mount your ov.conf so model providers / auth can be configured outside Docker.
+      # Create this file first: copy .env.example → ov.conf and fill in your keys.
+      - ./ov.conf:/root/.openviking/ov.conf:ro
+
+    environment:
+      OPENVIKING_SERVER_PORT:         ${OPENVIKING_SERVER_PORT:-1933}
+      OPENVIKING_PUBLIC_BASE_URL:     ${OPENVIKING_PUBLIC_BASE_URL:-}
+
+      # Gateway (optional — set OPENVIKING_GATEWAY_ENABLED=true to activate)
+      OPENVIKING_GATEWAY_ENABLED:        ${OPENVIKING_GATEWAY_ENABLED:-false}
+      OPENVIKING_GATEWAY_PORT:           ${OPENVIKING_GATEWAY_PORT:-1934}
+      OPENVIKING_GATEWAY_MANAGEMENT_KEY: ${OPENVIKING_GATEWAY_MANAGEMENT_KEY:-}
+      # Legacy key for data migrated from v0.5.0 gateway — read once, then remove.
+      OPENVIKING_GATEWAY_ENCRYPTION_KEY: ${OPENVIKING_GATEWAY_ENCRYPTION_KEY:-}
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${OPENVIKING_SERVER_PORT:-1933}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
