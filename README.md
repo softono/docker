@@ -8,14 +8,20 @@ Ultimate Directory of Docker templates. Ready-to-use Docker setups.
 
    **On Linux / macOS / Git Bash:**
    ```bash
-   bash setup.sh <folder_name>
+   bash scripts/setup.sh <folder_name>
    ```
 
-   **On Windows (Command Prompt or PowerShell):**
+   **On Windows (Command Prompt):**
    ```cmd
-   setup.bat <folder_name>
+   scripts\setup.bat <folder_name>
    ```
-   *Example:* `setup.bat n8n`
+   *Example:* `scripts\setup.bat n8n`
+
+   **On Windows (PowerShell):**
+   ```powershell
+   .\scripts\setup.ps1 <folder_name>
+   ```
+   *Example:* `.\scripts\setup.ps1 n8n`
 
 2. **Start the Containers**
    Navigate into the specific setup directory and start the services in detached mode using Docker Compose:

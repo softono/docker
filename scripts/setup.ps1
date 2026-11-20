@@ -3,18 +3,22 @@ param (
     [string]$FolderName
 )
 
+# Resolve repo root (parent of the scripts/ directory)
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$RepoRoot  = Split-Path -Parent $ScriptDir
+
 if (-not $FolderName) {
-    Write-Host "Usage: .\setup.ps1 <folder_name>"
+    Write-Host "Usage: .\scripts\setup.ps1 <folder_name>"
     exit 1
 }
 
-if (-not (Test-Path -Path $FolderName -PathType Container)) {
+if (-not (Test-Path -Path (Join-Path $RepoRoot $FolderName) -PathType Container)) {
     Write-Host "Error: Folder '$FolderName' does not exist."
     exit 1
 }
 
-$EnvExamplePath = Join-Path -Path $FolderName -ChildPath ".env.example"
-$EnvPath = Join-Path -Path $FolderName -ChildPath ".env"
+$EnvExamplePath = Join-Path -Path $RepoRoot -ChildPath $FolderName | Join-Path -ChildPath ".env.example"
+$EnvPath        = Join-Path -Path $RepoRoot -ChildPath $FolderName | Join-Path -ChildPath ".env"
 
 if (-not (Test-Path -Path $EnvExamplePath -PathType Leaf)) {
     Write-Host "Setup Completed Successfully."

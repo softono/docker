@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Resolve repo root (parent of the scripts/ directory)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$REPO_ROOT" || exit 1
+
 if [ -z "$1" ]; then
     echo "Usage: $0 <folder_name>"
     exit 1
@@ -12,7 +17,7 @@ if [ ! -d "$FOLDER" ]; then
     exit 1
 fi
 
-cd "$FOLDER" || exit 1
+cd "$REPO_ROOT/$FOLDER" || exit 1
 
 if [ ! -f ".env.example" ]; then
     echo "Setup Completed Successfully."
