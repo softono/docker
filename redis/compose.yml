@@ -12,5 +12,12 @@ services:
 
     command: redis-server --appendonly yes
 
+    networks:
+      - redis
+
 volumes:
   data:
+
+networks:
+  redis:
+    name: redis
