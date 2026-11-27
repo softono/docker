@@ -4,7 +4,7 @@ Ultimate Directory of Docker templates. Ready-to-use Docker setups.
 ## Getting Started
 
 1. **Initialize the Setup**
-   Use the provided setup script to automatically configure the environment variables for your chosen setup. This will safely copy the `.env.example` file to `.env` and automatically generate secure, random keys where needed.
+   Use the provided setup script to automatically configure the environment variables for your chosen setup. This will safely copy the `.env.example` file to `.env` and automatically generate secure, random keys for any value using `generate_random_key:<type>|<length>` (where `<type>` is `alnum` for alphanumeric characters or `base64` for base64-encoded random bytes, e.g. `generate_random_key:alnum|16` or `generate_random_key:base64|32`).
 
    **On Linux / macOS / Git Bash:**
    ```bash
@@ -41,10 +41,21 @@ Ultimate Directory of Docker templates. Ready-to-use Docker setups.
 
 Here are the currently available ready-to-use Docker configurations:
 
-- **`lightllm`**
-- **`n8n`**
-- **`redis`**
+- **`9router`**
+- **`aichat`**
+- **`jellyfin`**
+- **`lightllm`** *(uses external `postgres` network)*
+- **`mariadb`** *(network `mariadb`, tuned for 1 GB RAM / 2 cores)*
+- **`mongodb`** *(network `mongodb`, tuned for 1 GB RAM / 2 cores)*
+- **`n8n`** *(uses external `postgres` network)*
+- **`omniroute`**
+- **`openviking`**
+- **`postgres`** *(network `postgres`, tuned for 1 GB RAM / 2 cores)*
+- **`qbit`**
+- **`redis`** *(network `redis`, tuned for 1 GB RAM / 2 cores)*
 - **`stremio`**
+- **`trilium`**
+- **`vault`** *(uses external `postgres` network)*
 
 ## Installing Docker
 

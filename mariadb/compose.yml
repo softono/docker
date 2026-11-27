@@ -1,0 +1,49 @@
+services:
+  mariadb:
+    image: mariadb:12.3
+    container_name: mariadb
+    restart: unless-stopped
+
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      TZ: ${TZ:-UTC}
+
+    ports:
+      - "127.0.0.1:3306:3306"
+
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+    mem_limit: 1g
+    memswap_limit: 1g
+    cpus: 2
+
+    networks:
+      - mariadb
+
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+00:00
+
+      # Performance / resource limits (1 GB RAM, 2 cores)
+      - --innodb-buffer-pool-size=256M
+      - --innodb-buffer-pool-instances=1
+      - --innodb-log-file-size=64M
+      - --innodb-read-io-threads=2
+      - --innodb-write-io-threads=2
+      - --max-connections=40
+      - --table-open-cache=400
+      - --thread-cache-size=16
+      - --tmp-table-size=16M
+      - --max-heap-table-size=16M
+      - --performance-schema=OFF
+      - --innodb-flush-method=O_DIRECT
+      - --skip-log-bin
+
+volumes:
+  mariadb_data:
+
+networks:
+  mariadb:
+    name: mariadb

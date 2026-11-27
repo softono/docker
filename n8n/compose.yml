@@ -31,11 +31,11 @@ services:
 
     networks:
       - default
-      - postgres_default
+      - postgres
 
 volumes:
   n8n_data:
 
 networks:
-  postgres_default:
+  postgres:
     external: true

@@ -29,11 +29,22 @@ if [ -f ".env" ]; then
     exit 0
 fi
 
-# Function to generate random alphanumeric string of a given length
+# Function to generate random key of a given type (alnum or base64) and length
 generate_random_key() {
-    local length=$1
-    # Using /dev/urandom and tr to generate random string
-    LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c "$length"
+    local type=$1
+    local length=$2
+    case "$type" in
+        alnum)
+            LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c "$length"
+            ;;
+        base64)
+            head -c "$length" /dev/urandom | base64 | tr -d '\r\n'
+            ;;
+        *)
+            echo "Error: Unknown key type '$type' (expected 'alnum' or 'base64')" >&2
+            return 1
+            ;;
+    esac
 }
 
 rm -f .env
@@ -59,9 +70,11 @@ while IFS= read -r raw_line || [ -n "$raw_line" ]; do
             inner_val="${BASH_REMATCH[1]}"
         fi
         
-        # Determine if inner_val looks like a random key (alphanumeric and length >= 10)
-        if [[ "$inner_val" =~ ^[A-Za-z0-9]+$ ]] && [ ${#inner_val} -ge 10 ]; then
-            new_key=$(generate_random_key ${#inner_val})
+        # Generate key if inner_val matches generate_random_key:<type>|<length>
+        if [[ "$inner_val" =~ ^generate_random_key:(alnum|base64)\|([0-9]+)$ ]]; then
+            key_type="${BASH_REMATCH[1]}"
+            key_length="${BASH_REMATCH[2]}"
+            new_key=$(generate_random_key "$key_type" "$key_length")
             echo "${key}=${quote}${new_key}${quote}" >> .env
         else
             echo "$line" >> .env

@@ -30,14 +30,24 @@ if (Test-Path -Path $EnvPath -PathType Leaf) {
     exit 0
 }
 
-# Function to generate a random alphanumeric string
-function Get-RandomAlphanumericString {
-    param([int]$Length)
+# Function to generate a random key of a given type (alnum or base64) and length
+function Get-RandomKey {
+    param(
+        [ValidateSet("alnum", "base64")]
+        [string]$Type,
+        [int]$Length
+    )
+    $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+    if ($Type -eq "base64") {
+        $bytes = [byte[]]::new($Length)
+        $rng.GetBytes($bytes)
+        return [Convert]::ToBase64String($bytes)
+    }
+
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     $bytes = [byte[]]::new($Length)
-    $rng = [System.Security.Cryptography.RNGCryptoServiceProvider]::Create()
     $rng.GetBytes($bytes)
-    
+
     $result = ""
     for ($i = 0; $i -lt $Length; $i++) {
         $result += $chars[$bytes[$i] % $chars.Length]
@@ -64,8 +74,10 @@ foreach ($line in $lines) {
             $inner_val = $matches[1]
         }
         
-        if ($inner_val -match "^[A-Za-z0-9]+$" -and $inner_val.Length -ge 10) {
-            $new_key = Get-RandomAlphanumericString -Length $inner_val.Length
+        if ($inner_val -match "^generate_random_key:(alnum|base64)\|(\d+)$") {
+            $keyType = $matches[1]
+            $keyLength = [int]$matches[2]
+            $new_key = Get-RandomKey -Type $keyType -Length $keyLength
             $newLines += "${key}=${quote}${new_key}${quote}"
         } else {
             $newLines += $line

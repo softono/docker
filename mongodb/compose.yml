@@ -1,0 +1,38 @@
+services:
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    restart: unless-stopped
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      TZ: ${TZ:-UTC}
+
+    ports:
+      - "127.0.0.1:27017:27017"
+
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+
+    mem_limit: 1g
+    memswap_limit: 1g
+    cpus: 2
+
+    networks:
+      - mongodb
+
+    command:
+      - --auth
+      # Performance / resource limits (1 GB RAM, 2 cores)
+      - --wiredTigerCacheSizeGB=0.25
+      - --slowms=200
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+
+networks:
+  mongodb:
+    name: mongodb

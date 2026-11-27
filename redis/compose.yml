@@ -4,13 +4,33 @@ services:
     container_name: redis
     restart: no
 
+    environment:
+      TZ: ${TZ:-UTC}
+
     ports:
       - "6379:6379"
 
     volumes:
       - data:/data
 
-    command: redis-server --appendonly yes
+    mem_limit: 1g
+    memswap_limit: 1g
+    cpus: 2
+
+    command:
+      - redis-server
+      - --requirepass
+      - ${REDIS_PASSWORD}
+      - --appendonly
+      - "yes"
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - allkeys-lru
+      - --io-threads
+      - "2"
+      - --io-threads-do-reads
+      - "yes"
 
     networks:
       - redis

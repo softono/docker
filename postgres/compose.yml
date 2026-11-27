@@ -1,0 +1,112 @@
+services:
+  postgres:
+    image: postgres:18.6
+    container_name: postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: ${TZ:-UTC}
+      PGTZ: ${TZ:-UTC}
+
+    ports:
+      - "127.0.0.1:5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+    shm_size: 256mb
+
+    mem_limit: 1g
+    memswap_limit: 1g
+    cpus: 2
+
+    stop_grace_period: 1m
+
+    networks:
+      - postgres
+
+    command:
+      - postgres
+
+      # Connections
+      - -c
+      - max_connections=50
+      - -c
+      - superuser_reserved_connections=3
+
+      # Memory (1 GB RAM)
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - effective_cache_size=512MB
+      - -c
+      - maintenance_work_mem=64MB
+      - -c
+      - work_mem=4MB
+      - -c
+      - hash_mem_multiplier=2.0
+      - -c
+      - huge_pages=try
+
+      # WAL / Checkpoints
+      - -c
+      - wal_compression=on
+      - -c
+      - wal_buffers=8MB
+      - -c
+      - min_wal_size=128MB
+      - -c
+      - max_wal_size=512MB
+      - -c
+      - checkpoint_completion_target=0.9
+      - -c
+      - checkpoint_timeout=15min
+
+      # SSD / Query Planner
+      - -c
+      - random_page_cost=1.1
+      - -c
+      - effective_io_concurrency=100
+      - -c
+      - default_statistics_target=100
+
+      # Parallelism (2 cores)
+      - -c
+      - max_worker_processes=2
+      - -c
+      - max_parallel_workers=2
+      - -c
+      - max_parallel_workers_per_gather=1
+      - -c
+      - max_parallel_maintenance_workers=1
+
+      # Autovacuum
+      - -c
+      - autovacuum_max_workers=2
+      - -c
+      - autovacuum_naptime=30s
+      - -c
+      - autovacuum_vacuum_scale_factor=0.05
+      - -c
+      - autovacuum_analyze_scale_factor=0.025
+      - -c
+      - autovacuum_vacuum_cost_limit=1000
+
+      # Query monitoring
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - pg_stat_statements.max=5000
+      - -c
+      - pg_stat_statements.track=all
+      - -c
+      - track_io_timing=on
+
+volumes:
+  postgres_data:
+
+networks:
+  postgres:
+    name: postgres
