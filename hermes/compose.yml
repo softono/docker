@@ -1,17 +1,13 @@
 services:
   gateway:
-    build:
-      context: ./source
-      dockerfile: Dockerfile
-    image: hermes-agent:local
+    image: nousresearch/hermes-agent:latest
     container_name: hermes
     restart: unless-stopped
-
-    network_mode: host
-
+    ports:
+      - "8642:8642"
+      - "9119:9119"
     volumes:
       - ./data:/opt/data
-
     environment:
       - HERMES_UID=${HERMES_UID:-10000}
       - HERMES_GID=${HERMES_GID:-10000}
@@ -20,4 +16,10 @@ services:
       - API_SERVER_HOST=0.0.0.0
       - API_SERVER_KEY=${API_SERVER_KEY}
 
+      # Built-in web dashboard (port 9119)
+      - HERMES_DASHBOARD=true
+      - HERMES_DASHBOARD_HOST=0.0.0.0
+      - HERMES_DASHBOARD_PORT=9119
+      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=${HERMES_USERNAME}
+      - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=${HERMES_PASSWORD}
     command: ["gateway", "run"]

@@ -1,60 +1,52 @@
 # Hermes
 
-Docker Compose setup for building and running the Hermes agent gateway (`hermes-agent:local`) from `./source` using host networking.
+Docker Compose setup for running the official Hermes agent gateway and built-in web dashboard (`nousresearch/hermes-agent:latest`).
+
+> For building from local source instead, see [`../hermes_build`](../hermes_build).
 
 ## Prerequisites
 
-- Git
 - Docker and Docker Compose
-- Local source repository placed in `hermes/source` containing a `Dockerfile`
 
 ## Getting Started
 
-1. **Clone the Hermes repository:**
+1. **Configure environment variables:**
+   Run the root setup script to generate `.env` with random secrets, or copy `hermes/.env.example` to `hermes/.env` manually:
+   ```powershell
+   .\scripts\setup.ps1 hermes
+   ```
+   Or manually:
    ```bash
-   git clone https://github.com/NousResearch/hermes-agent.git hermes/source
+   cp hermes/.env.example hermes/.env
    ```
 
-2. **Configure environment variables:**
-   Copy `hermes/.env.examle` to `hermes/.env` and replace the placeholder secrets (`API_SERVER_KEY`, `HERMES_PASSWORD`, `HERMES_AUTH_SECRET`):
-   ```bash
-   cp hermes/.env.examle hermes/.env
-   ```
-
-3. **Build and start the service:**
+2. **Start the service:**
    ```bash
    cd hermes
-   docker compose up -d --build
+   docker compose up -d
    ```
+
+3. **Access the Dashboard:**
+   Open [http://127.0.0.1:9119/](http://127.0.0.1:9119/) and sign in using `HERMES_USERNAME` and `HERMES_PASSWORD` from `hermes/.env`.
 
 ## Services
 
-| Service | Container | Purpose |
-| --- | --- | --- |
-| `gateway` | `hermes` | Hermes agent gateway (`gateway run`, host network) |
+| Service | Container | Ports | Purpose |
+| --- | --- | --- | --- |
+| `gateway` | `hermes` | `8642`, `9119` | Hermes agent gateway (`gateway run`) + built-in web dashboard |
 
 ## Documentation
 
-### Environment Variables (`.env.examle` / `.env`)
+### Environment Variables (`.env.example` / `.env`)
 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `HERMES_UID` | `10000` | UID used inside the container. |
 | `HERMES_GID` | `10000` | GID used inside the container. |
-| `API_SERVER_KEY` | `YOUR_RANDOM_API_KEY` | API key for authenticating gateway API requests. |
-| `HERMES_USERNAME` | `creator` | Username for Hermes authentication. |
-| `HERMES_PASSWORD` | `YOUR_STRONG_PASSWORD` | Password for Hermes authentication. |
-| `HERMES_AUTH_SECRET` | `YOUR_RANDOM_SECRET` | Secret used for Hermes auth signing. |
-
-### `compose.yml` Parameters
-
-- **`gateway` service (`hermes`)**:
-  - `build`: Builds from `./source` using `./source/Dockerfile` and tags the image as `hermes-agent:local`.
-  - `network_mode: host`: Shares the host network stack directly.
-  - `volumes`: Mounts `./data:/opt/data` for persistent data.
-  - `environment`: Sets `HERMES_UID`, `HERMES_GID`, `API_SERVER_HOST=0.0.0.0`, and `API_SERVER_KEY`.
-  - `command`: Runs `["gateway", "run"]`.
-  - `restart`: `unless-stopped`.
+| `API_SERVER_KEY` | `generate_random_key:alnum\|32` | API key for authenticating gateway API requests. |
+| `HERMES_USERNAME` | `creator` | Username for Hermes dashboard basic auth (`HERMES_DASHBOARD_BASIC_AUTH_USERNAME`). |
+| `HERMES_PASSWORD` | `generate_random_key:alnum\|24` | Password for Hermes dashboard basic auth (`HERMES_DASHBOARD_BASIC_AUTH_PASSWORD`). |
+| `HERMES_AUTH_SECRET` | `generate_random_key:base64\|32` | Secret used for Hermes auth signing. |
 
 ## Useful Commands
 
@@ -62,8 +54,8 @@ Docker Compose setup for building and running the Hermes agent gateway (`hermes-
 # View logs
 docker compose logs -f gateway
 
-# Rebuild and restart
-docker compose up -d --build
+# Pull latest image and restart
+docker compose pull && docker compose up -d
 
 # Stop services
 docker compose down
