@@ -46,7 +46,7 @@ services:
       - redis
 
   soketi:
-    image: ghcr.io/coollabsio/coolify-realtime:latest
+    image: ghcr.io/coollabsio/coolify-realtime:1.0.12
     container_name: coolify-realtime
     restart: unless-stopped
     ports:

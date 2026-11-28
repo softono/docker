@@ -1,0 +1,23 @@
+services:
+  gateway:
+    build:
+      context: ./source
+      dockerfile: Dockerfile
+    image: hermes-agent:local
+    container_name: hermes
+    restart: unless-stopped
+
+    network_mode: host
+
+    volumes:
+      - ./data:/opt/data
+
+    environment:
+      - HERMES_UID=${HERMES_UID:-10000}
+      - HERMES_GID=${HERMES_GID:-10000}
+
+      # Gateway API authentication
+      - API_SERVER_HOST=0.0.0.0
+      - API_SERVER_KEY=${API_SERVER_KEY}
+
+    command: ["gateway", "run"]
