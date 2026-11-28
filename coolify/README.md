@@ -19,8 +19,13 @@ Docker Compose setup for [Coolify](https://coolify.io/) (`ghcr.io/coollabsio/coo
 2. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `coolify/.env` with generated `APP_KEY` and Pusher/Soketi credentials, then set `DB_PASSWORD` and `REDIS_PASSWORD`:
    ```bash
-   bash scripts/setup.sh coolify
+   ./scripts/setup.sh coolify
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 3. **Start the services:**
    ```bash

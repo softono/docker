@@ -12,8 +12,13 @@ Docker Compose setup for [OmniRoute](https://hub.docker.com/r/diegosouzapw/omnir
 1. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `omniroute/.env` with a generated `INITIAL_PASSWORD`:
    ```bash
-   bash scripts/setup.sh omniroute
+   ./scripts/setup.sh omniroute
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 2. **Start the service:**
    ```bash

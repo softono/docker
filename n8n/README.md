@@ -18,8 +18,13 @@ Docker Compose setup for [n8n](https://n8n.io/) (`docker.n8n.io/n8nio/n8n:latest
 2. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `n8n/.env` with a generated `N8N_ENCRYPTION_KEY`, then set `N8N_HOST`, `POSTGRESDB_HOST` (e.g. `postgres` if using the `postgres` container), and `POSTGRESDB_PASSWORD`:
    ```bash
-   bash scripts/setup.sh n8n
+   ./scripts/setup.sh n8n
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 3. **Start the service:**
    ```bash

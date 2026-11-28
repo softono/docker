@@ -11,8 +11,13 @@ Docker Compose setup for [TriliumNext Notes](https://github.com/TriliumNext/tril
 1. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `trilium/.env`, then update `TRILIUM_PUBLIC_URL` (and `TRILIUM_PORT` / `TRILIUM_INSTANCE_NAME` if needed):
    ```bash
-   bash scripts/setup.sh trilium
+   ./scripts/setup.sh trilium
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 2. **Start the service:**
    ```bash

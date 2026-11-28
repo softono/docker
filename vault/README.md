@@ -18,8 +18,13 @@ Docker Compose setup for [Vaultwarden](https://github.com/dani-garcia/vaultwarde
 2. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `vault/.env` with a generated `ADMIN_TOKEN`, then set `DOMAIN` and your PostgreSQL password in `DATABASE_URL`:
    ```bash
-   bash scripts/setup.sh vault
+   ./scripts/setup.sh vault
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 3. **Start the service:**
    ```bash

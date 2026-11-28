@@ -11,8 +11,13 @@ Docker Compose setup for [Open WebUI](https://docs.openwebui.com/) (`ghcr.io/ope
 1. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `openwebui/.env` with a generated `WEBUI_SECRET_KEY`, then set `WEBUI_DOCKER_TAG` (e.g. `main`), `WEBUI_URL`, `OPENAI_API_BASE_URL`, and `OPENAI_API_KEY`:
    ```bash
-   bash scripts/setup.sh openwebui
+   ./scripts/setup.sh openwebui
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 2. **Start the service:**
    ```bash

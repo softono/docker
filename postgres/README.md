@@ -11,8 +11,13 @@ Docker Compose setup for [PostgreSQL](https://www.postgresql.org/) (`postgres:18
 1. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `postgres/.env` with a generated `POSTGRES_PASSWORD`:
    ```bash
-   bash scripts/setup.sh postgres
+   ./scripts/setup.sh postgres
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 2. **Start the service:**
    ```bash

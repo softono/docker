@@ -19,7 +19,11 @@ Docker Compose setup for [n8n-io/nod](https://github.com/n8n-io/nod), configured
    ```bash
    scripts/setup.sh nod
    ```
-   or copy the `.env.example` file to `.env` and edit it manually.
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 3. **Build and start the services:**
    ```bash

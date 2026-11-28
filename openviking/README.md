@@ -15,8 +15,13 @@ Docker Compose setup for [OpenViking](https://github.com/volcengine/OpenViking) 
 2. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `openviking/.env` with a generated `OPENVIKING_GATEWAY_MANAGEMENT_KEY`, and set `OPENVIKING_PUBLIC_BASE_URL`:
    ```bash
-   bash scripts/setup.sh openviking
+   ./scripts/setup.sh openviking
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 3. **Start the service:**
    ```bash

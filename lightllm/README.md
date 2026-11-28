@@ -18,7 +18,7 @@ Docker Compose setup for [LiteLLM Proxy](https://docs.litellm.ai/) (`ghcr.io/ber
 2. **Configure environment variables and `config.yaml`:**
    From the repository root, run `scripts/setup.sh` to create `lightllm/.env` with generated `LITELLM_MASTER_KEY` and `UI_PASSWORD`, then update `DATABASE_URL` and `OPENAI_API_KEY` in `lightllm/.env` as well as `lightllm/config.yaml`:
    ```bash
-   bash scripts/setup.sh lightllm
+   ./ lightllm
    ```
 
 3. **Start the service:**

@@ -11,8 +11,13 @@ Docker Compose setup for [9Router](https://hub.docker.com/r/decolua/9router) (`d
 1. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to generate `9router/.env` with random `INITIAL_PASSWORD` and `JWT_SECRET` values:
    ```bash
-   bash scripts/setup.sh 9router
+   ./scripts/setup.sh 9router
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 2. **Start the service:**
    ```bash

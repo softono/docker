@@ -11,8 +11,13 @@ Docker Compose setup for [Soketi](https://github.com/soketi/soketi) (`quay.io/so
 1. **Configure environment variables:**
    From the repository root, run `scripts/setup.sh` to create `soketi/.env` with generated `SOKETI_DEFAULT_APP_ID`, `SOKETI_DEFAULT_APP_KEY`, and `SOKETI_DEFAULT_APP_SECRET` values:
    ```bash
-   bash scripts/setup.sh soketi
+   ./scripts/setup.sh soketi
    ```
+   or
+   ```bash
+   cp .env.example .env
+   ```
+   copy the `.env.example` file to `.env` and edit it manually.
 
 2. **Start the service:**
    ```bash

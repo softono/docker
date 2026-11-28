@@ -4,18 +4,24 @@ Docker Compose setup for building and running the Hermes agent gateway (`hermes-
 
 ## Prerequisites
 
+- Git
 - Docker and Docker Compose
 - Local source repository placed in `hermes/source` containing a `Dockerfile`
 
 ## Getting Started
 
-1. **Configure environment variables:**
+1. **Clone the Hermes repository:**
+   ```bash
+   git clone https://github.com/NousResearch/hermes-agent.git hermes/source
+   ```
+
+2. **Configure environment variables:**
    Copy `hermes/.env.examle` to `hermes/.env` and replace the placeholder secrets (`API_SERVER_KEY`, `HERMES_PASSWORD`, `HERMES_AUTH_SECRET`):
    ```bash
    cp hermes/.env.examle hermes/.env
    ```
 
-2. **Build and start the service:**
+3. **Build and start the service:**
    ```bash
    cd hermes
    docker compose up -d --build

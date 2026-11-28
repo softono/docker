@@ -8,7 +8,7 @@ Ultimate Directory of Docker templates. Ready-to-use Docker setups.
 
    **On Linux / macOS / Git Bash:**
    ```bash
-   bash scripts/setup.sh <folder_name>
+   ./ <folder_name>
    ```
 
    **On Windows (Command Prompt):**
