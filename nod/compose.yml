@@ -1,0 +1,118 @@
+name: nod
+services:
+  nod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nod
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NOD_HOST: 0.0.0.0
+      PORT: ${PORT:-4310}
+      WORKSPACE_CONTAINER: nod-workspace
+      BROWSER_CONTAINER: nod-browser
+    ports:
+      - "127.0.0.1:${PORT:-4310}:4310"
+    volumes:
+      - ./data:/app/.local
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      browser:
+        condition: service_healthy
+      workspace:
+        condition: service_started
+    networks:
+      - default
+      - postgres
+
+  browser:
+    build:
+      context: https://github.com/n8n-io/nod.git#main
+      dockerfile: Dockerfile.browser
+    container_name: nod-browser
+    hostname: nod-browser
+    init: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    read_only: true
+    pids_limit: 4096
+    mem_limit: 8g
+    cpus: ${NOD_BROWSER_CPUS:-6}
+    shm_size: 1g
+    volumes:
+      - browser-data:/data
+    tmpfs:
+      - /tmp:size=1g
+      - /home/node:uid=1000,gid=1000,mode=700,size=256m
+    networks:
+      - default
+      - postgres
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          'const s=require("node:net").connect("/data/control.sock");s.on("connect",()=>{s.end();process.exit(0)});s.on("error",()=>process.exit(1))',
+        ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  workspace:
+    build:
+      context: https://github.com/n8n-io/nod.git#main
+      dockerfile: Dockerfile.workspace
+    image: nod-local-workspace
+    container_name: nod-workspace
+    init: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 4096
+    mem_limit: 8g
+    cpus: ${NOD_WORKSPACE_CPUS:-4}
+    volumes:
+      - ./data/workspaces:/workspace
+      - workspace-tools:/home/node
+    network_mode: service:workspace-network
+    depends_on:
+      workspace-network:
+        condition: service_healthy
+        restart: true
+    command: ['sleep', 'infinity']
+
+  workspace-network:
+    image: nod-local-workspace
+    pull_policy: never
+    dns: [1.1.1.1, 8.8.8.8]
+    user: root
+    init: true
+    entrypoint: /usr/local/bin/nod-workspace-network
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN]
+    security_opt: [no-new-privileges:true]
+    read_only: true
+    tmpfs:
+      - /tmp:size=1m
+    pids_limit: 32
+    mem_limit: 64m
+    networks:
+      - default
+      - postgres
+    healthcheck:
+      test: ['CMD', 'test', '-f', '/tmp/network-ready']
+      interval: 2s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  workspace-tools:
+  browser-data:
+
+networks:
+  default:
+    name: nod
+  postgres:
+    external: true
