@@ -43,6 +43,7 @@ Here are the currently available ready-to-use Docker configurations:
 
 - **`9router`**
 - **`aichat`**
+- **`coolify`** *(uses external `postgres` and `redis` networks)*
 - **`jellyfin`**
 - **`lightllm`** *(uses external `postgres` network)*
 - **`mariadb`** *(network `mariadb`, tuned for 1 GB RAM / 2 cores)*
@@ -53,6 +54,7 @@ Here are the currently available ready-to-use Docker configurations:
 - **`postgres`** *(network `postgres`, tuned for 1 GB RAM / 2 cores)*
 - **`qbit`**
 - **`redis`** *(network `redis`, tuned for 1 GB RAM / 2 cores)*
+- **`soketi`** *(network `soketi`, Pusher-compatible WebSocket server)*
 - **`stremio`**
 - **`trilium`**
 - **`vault`** *(uses external `postgres` network)*
